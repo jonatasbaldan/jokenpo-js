@@ -1,134 +1,139 @@
-const playerChoise = document.querySelectorAll('.c-game__choise');
-let choiseValue = 0;
-let computerValue = 0;
-const optionsEmoji = {1: `✊`, 2:`✌️`, 3:`✋`};
+const OPTIONS = {
+  PEDRA: "PEDRA",
+  TESOURA: "TESOURA",
+  PAPEL: "PAPEL",
+};
+const OPTIONS_EMOJI = {
+  [OPTIONS.PEDRA]: "✊",
+  [OPTIONS.TESOURA]: "✌️",
+  [OPTIONS.PAPEL]: "✋",
+};
+const WIN_CONDITIONS = [
+  { PLAYER: OPTIONS.PEDRA, COMPUTER: OPTIONS.TESOURA },
+  { PLAYER: OPTIONS.TESOURA, COMPUTER: OPTIONS.PAPEL },
+  { PLAYER: OPTIONS.PAPEL, COMPUTER: OPTIONS.PEDRA },
+];
+const RESULTS = {
+  PLAYER_WON: "Você ganhou!",
+  DRAW: "Empate!",
+  PLAYER_LOST: "Computador Venceu!",
+};
 
+const resultDiv = document.querySelector(".c-game__result");
+const optionsDiv = document.querySelector(".c-game__options");
+const $H2 = document.querySelector(".c-game__title__choise");
+const $BUTTONRESET = document.querySelector(".c-game__reset");
 
-for (const choise of playerChoise) {
-    choise.addEventListener('click', (button) => {
-        
-        choiseValue = parseInt(button.target.value);
-        
-        MainGame ();
-    });
-
+function createPlayerOptions() {
+  Object.values(OPTIONS).forEach((option) => {
+    const optionButton = document.createElement("button");
+    optionButton.value = option;
+    optionButton.textContent = OPTIONS_EMOJI[option];
+    optionButton.className = "c-game__choise has--transition";
+    optionButton.onclick = () => executeMainGame(option);
+    optionsDiv.appendChild(optionButton);
+  });
 }
 
+createPlayerOptions();
 
-function ComputerChoise(){
-    let randomNumber = parseInt(Math.random() * 3) + 1;
-    return randomNumber
+const $BUTTONS = document.querySelectorAll(".c-game__choise");
 
+function getComputerChoice() {
+  const optionsAmount = Object.values(OPTIONS).length;
+  const randomNumber = parseInt(Math.random() * optionsAmount);
+  return Object.values(OPTIONS)[randomNumber];
 }
 
+function getGameResult(playerChoice, computerChoice) {
+  const meetsWinConditions = WIN_CONDITIONS.some(
+    (condition) =>
+      condition.PLAYER === playerChoice && condition.COMPUTER === computerChoice
+  );
 
-function MainGame () {
-   
-    computerValue = ComputerChoise();
-    
-    const resultDiv = document.querySelector('.c-game__result');
-   
-    let result = '';
+  if (meetsWinConditions) {
+    return RESULTS.PLAYER_WON;
+  }
 
-    if ((choiseValue < computerValue) && (computerValue === choiseValue + 1)){
-        result = 'Você ganhou!';
-    }
+  if (computerChoice === playerChoice) {
+    return RESULTS.DRAW;
+  }
 
-    else if (computerValue == choiseValue) {
-        result = 'Empate!';
-    }
+  return RESULTS.PLAYER_LOST;
+}
 
-    else if (choiseValue - 2 == computerValue){
-        result = 'Você ganhou!';
-    }
+function executeMainGame(playerChoice) {
+  const computerChoice = getComputerChoice();
+  const result = getGameResult(playerChoice, computerChoice);
 
-    else {
-        result = 'Computador Venceu!';
-    }
+  resultDiv.style.display = "flex";
 
-    resultDiv.style.display = 'flex';
-
-
-
-    resultDiv.innerHTML =   `<section class="c-game__winner__animation">
-                                <div class="c-game__option__animation is--right has--animation">${optionsEmoji[1]}</div>
-                                <div class="c-game__option__animation is--left has--animation">${optionsEmoji[1]}</div>
+  resultDiv.innerHTML = `<section class="c-game__winner__animation">
+                                <div class="c-game__option__animation is--right has--animation">${OPTIONS_EMOJI.PEDRA}</div>
+                                <div class="c-game__option__animation is--left has--animation">${OPTIONS_EMOJI.PEDRA}</div>
                             </section>`;
 
-    //Display the results after the hands animation.
-    setTimeout(() => {
-        resultDiv.innerHTML =   `<section class="c-game__winner">
-                                    <div class="c-game__option is--right">${optionsEmoji[choiseValue]}</div>
+  //Display the results after the hands animation.
+  setTimeout(() => {
+    resultDiv.innerHTML = `<section class="c-game__winner">
+                                    <div class="c-game__option is--right">${OPTIONS_EMOJI[playerChoice]}</div>
                                     <div class="c-game__option is--x">X</div>
-                                    <div class="c-game__option is--left">${optionsEmoji[computerValue]}</div>
+                                    <div class="c-game__option is--left">${OPTIONS_EMOJI[computerChoice]}</div>
                                 </section>
-                                <p class="c-game__winner__result">${result} </p>`;
-    }, 3100);
+                                <p class="c-game__winner__result">${result}</p>`;
+  }, 3100);
 
-    AnimationGame();
+  animateGame();
 }
 
-
-function AnimationGame () {
-
-    const hideElements = () => {
-        const $H2 = document.querySelector('.c-game__title__choise');
-        $H2.style.display = 'none';
-    
-        const $BUTTONS = document.querySelectorAll('.c-game__choise');
-
-        for (const button of $BUTTONS) {
-            button.style.display = 'none';
-        }
-    }
-
-    const H1Animation = () => {
-        const $H1 = document.querySelector('h1');
-        $H1.innerText = ` `;
-
-        let countAnimationH1 = 0;
-
-        //setInterval will loop every 1 second, when the H1 is entire showed
-        //the clearInterval will stop the loop.
-        
-        const h1Animation = setInterval(() => {
-    
-            const h1Array = ['Pedra', ' Papel', ' ou Tesoura'];
-            
-            countAnimationH1 == 3 ? clearInterval(h1Animation) : $H1.innerText += `${h1Array[countAnimationH1]}`;
-    
-            countAnimationH1++
-        }, 1000);
-    }
-
-    const displayButtonReset = () => {
-        const $BUTTONRESET = document.querySelector('.c-game__reset');
-
-        $BUTTONRESET.style.display = 'block';
-
-        $BUTTONRESET.addEventListener('click', ResetGame);
-    }
-
-    hideElements();
-    H1Animation();
-    setTimeout(displayButtonReset, 3500);
-}
-
-
-function ResetGame () {
-    const $H2 = document.querySelector('.c-game__title__choise');
-    $H2.style.display = 'block';
-
-    const $BUTTONRESET = document.querySelector('.c-game__reset');
-    $BUTTONRESET.style.display = 'none';
-
-    const $BUTTONS = document.querySelectorAll('.c-game__choise');
+function animateGame() {
+  const hideElements = () => {
+    $H2.style.display = "none";
 
     for (const button of $BUTTONS) {
-        button.style.display = 'block';
+      button.style.display = "none";
     }
+  };
 
-    const resultDiv = document.querySelector('.c-game__result');
-    resultDiv.style.display = 'none';
+  const H1Animation = () => {
+    const $H1 = document.querySelector("h1");
+    $H1.innerText = ` `;
 
+    let animationIteration = 0;
+
+    //setInterval will loop every 1 second, when the H1 is entire showed
+    //the clearInterval will stop the loop.
+
+    const animation = setInterval(() => {
+      const h1Array = ["Pedra", " Papel", " ou Tesoura"];
+
+      animationIteration === 3
+        ? clearInterval(animation)
+        : ($H1.innerText += h1Array[animationIteration]);
+
+      animationIteration++;
+    }, 1000);
+  };
+
+  const displayButtonReset = () => {
+    $BUTTONRESET.style.display = "block";
+
+    $BUTTONRESET.addEventListener("click", resetGame);
+  };
+
+  hideElements();
+  H1Animation();
+  setTimeout(displayButtonReset, 3500);
+}
+
+function resetGame() {
+  $H2.style.display = "block";
+
+  $BUTTONRESET.style.display = "none";
+
+  for (const button of $BUTTONS) {
+    button.style.display = "block";
+  }
+
+  resultDiv.style.display = "none";
 }
