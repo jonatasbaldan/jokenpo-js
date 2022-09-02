@@ -24,7 +24,7 @@ const optionsDiv = document.querySelector(".c-game__options");
 const $H2 = document.querySelector(".c-game__title__choise");
 const $BUTTONRESET = document.querySelector(".c-game__reset");
 
-(() => {
+function createPlayerOptions() {
   Object.values(OPTIONS).forEach((option) => {
     const optionButton = document.createElement("button");
     optionButton.value = option;
@@ -33,7 +33,9 @@ const $BUTTONRESET = document.querySelector(".c-game__reset");
     optionButton.onclick = () => executeMainGame(option);
     optionsDiv.appendChild(optionButton);
   });
-})();
+}
+
+createPlayerOptions();
 
 const $BUTTONS = document.querySelectorAll(".c-game__choise");
 
