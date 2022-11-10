@@ -49,10 +49,9 @@ body {
 }
 
 .c-game__choise:hover {
-    position: relative;
     bottom: 15px;
     cursor: pointer;
-    border: 1px solid #d4d4d4;
+    border: #d4d4d4;
 }
 
 .c-game__choise:active {
@@ -114,7 +113,9 @@ body {
     transform: rotate(-90deg);
 }
 
-.has--animation{
+.has--animation {
+    position: relative;
+    transition: top 0.03s ease-in;
     animation-duration: 0.5s;
     animation-name: slide;
     animation-iteration-count: 6;
@@ -123,17 +124,12 @@ body {
 
 @keyframes slide {
     from {
-        position: relative;
         top: 15px;
-        transition: top 0.03s ease-in;
     }
 
-    to{
-        transition: top 0.03s ease-in;
-        position: relative;
+    to {
         top: 0px;
     }
-    
 }
 
 /*End Animation Game*/
