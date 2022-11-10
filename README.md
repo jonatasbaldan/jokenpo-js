@@ -1,7 +1,7 @@
-# Jo-Ken-Po Game
+# Jo-Ken-Po Game ✊ 🤚 ✌️
 A Jo-Ken-Po game made only with pure HTML, CSS and Javascript.
 
-Has only 1 player mode, player vs computer.
+Has only 1 player mode, 👨‍🦲 vs 🤖.
 
 ![image](https://user-images.githubusercontent.com/107167711/201004136-d47396fc-082d-4c00-954c-c91e12cd9603.png)
 
